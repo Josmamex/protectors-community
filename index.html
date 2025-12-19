@@ -3,15 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comunidad de Protectores Ejecutivos</title>
-    <meta name="description" content="Plataforma de educación y capacitación en seguridad para profesionales de protección ejecutiva en LATAM">
+    <title>Protectores Ejecutivos - Solicitud de Acceso</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #000; height: 100vh; overflow: hidden; }
-        iframe { width: 100%; height: 100%; border: none; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: #4caf50;
+            color: white;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        .error-message {
+            background: #f44336;
+            color: white;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+        }
     </style>
 </head>
 <body>
-    <iframe src="https://protector-hub.lovable.app" title="Comunidad de Protectores Ejecutivos"></iframe>
+    <div class="container">
+        <div class="header">
+            <h1>Protectores Ejecutivos</h1>
+            <p>Completa tus datos para solicitar acceso a la comunidad. Revisamos cada solicitud de forma manual para cuidar la calidad del grupo.</p>
+        </div>
+
+        <div id="successMessage" class="success-message">¡Gracias por tu solicitud! Revisaremos tu perfil y recibirás el acceso en unas horas.</div>
+        <div id="errorMessage" class="error-message">Hubo un error. Por favor intenta de nuevo.</div>
+
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="nombre">Nombre Completo</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+
+            <div class="form-group">
+                <label for="whatsapp">WhatsApp</label>
+                <input type="tel" id="whatsapp" name="whatsapp" placeholder="+52 1234567890" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="loading" id="loading">Enviando solicitud...</div>
+            <button type="submit" class="submit-btn" id="submitBtn">Solicitar acceso a la comunidad</button>
+        </form>
+    </div>
+
+    <script>
+        // Reemplaza estos valores con tus credenciales de GoHighLevel
+        const GHL_API_KEY = 'YOUR_GHL_API_KEY';
+        const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
+
+        document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombre').value;
+            const whatsapp = document.getElementById('whatsapp').value;
+            const email = document.getElementById('email').value;
+
+            const loading = document.getElementById('loading');
+            const submitBtn = document.getElementById('submitBtn');
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+
+            loading.style.display = 'block';
+            submitBtn.disabled = true;
+
+            try {
+                // Aquí iría la llamada a GoHighLevel
+                // Por ahora, guardamos en localStorage como demostración
+                const formData = {
+                    nombre,
+                    whatsapp,
+                    email,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Llamar al webhook de GoHighLevel
+                const response = await fetch(GHL_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    successMsg.style.display = 'block';
+                    errorMsg.style.display = 'none';
+                    document.getElementById('registrationForm').style.display = 'none';
+                    setTimeout(() => {
+                        document.getElementById('registrationForm').reset();
+                        document.getElementById('registrationForm').style.display = 'block';
+                        successMsg.style.display = 'none';
+                    }, 4000);
+                } else {
+                    throw new Error('Error en la solicitud');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+            } finally {
+                loading.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
